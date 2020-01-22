@@ -1,0 +1,139 @@
+<!-- include content of layout.html -->
+{% extends '/html/layout.html' %}
+
+{% block title %}Stock Prediction Application{% endblock %}
+
+{% block body %}
+<!-- body of the html page that displays user interface -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <hr>
+      <h1 style="text-align:center; font-size:50px"><i class="fas fa-text">Stock Prediction Application</i></h1>
+      <hr>
+      <h3>Please select an organization?</h3>
+      <br>
+      <form action="/Check_result" method="POST">
+      <div class="form-group">
+        <div class="row">
+            <div class="col-sm-5">
+              <select name="comp_name" class="btn btn-primary dropdown-toggle col-sm-6">
+                  <option value="AAPL">Apple</option>
+                  <option value="GOOG">Google</option>
+              </select>
+            </div>
+        </div>
+      </div>
+          <button type="submit" class="btn btn-warning"> Predict Stock </button>
+      </form>
+
+      <br><hr>
+
+      <!--displays predicted results-->
+      <h3> Predicted Results </h3>
+       <br>
+       <div class="container">
+            <div class="row row-list">
+                <div class="col-xs-4">
+                    {% if feature_Lists %}
+                   <table id="tab1">
+                       <thead>
+                        <tr>
+                          <th>Feature Name</th>
+                          <th>Value</th>
+                        </tr>
+                        </thead>
+                        {% for feature_List in feature_Lists %}
+                         <tbody>
+                            <tr>
+                                <td>{{ feature_List[0] }}</td>
+                                <td>{{ feature_List[1] }}</td>
+                            </tr>
+                          </tbody>
+                        {% endfor %}
+                   </table>
+                    {% endif %}
+                </div>
+                <div class="col-xs-4" id="piechart"></div>
+                <div class="col-xs-4">
+                    {% if pred_Lists %}
+                   <table id="tab2">
+                       <thead>
+                        <tr>
+                          <th>Model Name</th>
+                          <th>Accuracy(%)</th>
+                          <th>Predicted Outcome</th>
+                        </tr>
+                        </thead>
+                        {% for pred_List in pred_Lists %}
+                        <tbody>
+                            <tr>
+                                <td>{{ pred_List[0] }}</td>
+                                <td>{{ pred_List[1] }}</td>
+                                <td>
+                                    {% if pred_List[2] == 'Down' %}
+                                        {{pred_List[2]}}  &nbsp; <i class="fa fa-arrow-down animated bounce infinite" style="font-size:20px;color:darkred;animation-duration: 3s;animation-delay:.2s;"></i>
+                                    {% endif %}
+                                    {% if pred_List[2] == 'Up' %}
+                                        {{pred_List[2]}}  &nbsp; <i class="fa fa-arrow-up animated bounce infinite" style="font-size:20px;color:green;animation-duration: 3s;animation-delay:.2s;"></i>
+                                    {% endif %}
+                                    {% else %}
+                                        {{pred_List[2]}} &nbsp; <i class="fa fa-arrows-h" style="font-size:20px;color:yellow"></i>
+                                 </td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                   </table>
+                    {% endif %}
+                </div>
+
+                </div>
+            </div>
+            <br>
+           {% if feature_Lists %}
+            <button type="submit" class="btn btn-warning" onClick='home()'><i class="fa fa-arrow-left" aria-hidden="true"></i> Home Page </button>
+           {% endif %}
+        <hr>
+      </div>
+  </div>
+</div>
+</div>
+
+<!--google charts being used to make pie-charts-->
+{% if feature_Lists %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        /*
+            Citation: https://developers.google.com/chart/interactive/docs/basic_load_libs
+        */
+        // Load google charts
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        var pos = '{{ pos_score }}';
+        var neg = '{{ neg_score }}';
+        var neut = '{{ neut_score }}';
+
+        // Draw the chart and set the chart values
+        function drawChart() {
+          var data = google.visualization.arrayToDataTable([
+          ['Feature', 'value'],
+          ['positive%', parseInt(pos)],
+          ['negative%', parseInt(neg)],
+          ['neutral%', parseInt(neut)]
+          ]);
+
+          // Optional; add a title and set the width and height of the chart
+          var options = {'title':'Sentiment Score(%)', 'width':460, 'height':400};
+
+          // Display the chart inside the <div> element with id="piechart"
+          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+          chart.draw(data, options);
+        }
+    </script>
+    <script>
+    function home() {
+      location.replace("http://127.0.0.1:5000/")
+    }
+    </script>
+{% endif %}
+{% endblock %}

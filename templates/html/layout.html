@@ -1,0 +1,46 @@
+<!-- Boiler plate html common header for each page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Stock Prediction Application</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+     #tab1,#tab2 {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #tab1 td, #tab1 th, #tab2 td, #tab2 th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      #tab1 tr:nth-child(even){background-color: #f2f2f2;}
+
+      #tab1 tr:hover {background-color: #ddd;}
+
+      #tab2 tr:nth-child(even){background-color: #f2f2f2;}
+
+      #tab2 tr:hover {background-color: #ddd;}
+
+      #tab1 th, #tab2 th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+      }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
+  </head>
+  <body style="background-color: #ffffff">
+    <!-- displays the body of html, included in other html file-->
+    {% block body %}{% endblock %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
